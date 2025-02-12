@@ -1,3 +1,5 @@
+Adding some sample lines
+
 # Devops Example Project
 
 # Project Dependencies
