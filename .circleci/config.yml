@@ -4,7 +4,7 @@ jobs:
   build:
     working_directory: ~/ExampleApplication
     docker:
-      - image: cimg/node:16  # Using a Node.js Docker image
+      - image: cimg/node:14   # Using a Node.js Docker image
     steps:
       - checkout  # This checks out the code from the repository
       - run:
