@@ -1,5 +1,3 @@
-Adding some sample lines
-
 # Devops Example Project
 
 # Project Dependencies
@@ -17,6 +15,3 @@ Adding some sample lines
 
 ***
 
-Triggering CI/CD Pipeline
-# Triggering CI/CD
-Test CI/CD trigger

@@ -13,18 +13,20 @@ jobs:
       - checkout  # Checks out the code from the repository
 
       - restore_cache:
-          key: dependency-cache-{{ checksum "package-lock.json" }}  # Restore the cache based on package-lock.json
+          key: dependency-cache-{{ checksum "package-lock.json" }}  # Restore cache
 
       - run:
           name: Install npm dependencies
-          command: npm install  # Installs dependencies (with correct npm version)
-      -run:
-          name: test-run
-          command: npm run test
+          command: npm install  # Installs dependencies
+
+      - run:
+          name: Run tests
+          command: npm run test  # Correct syntax for running tests
+
       - save_cache:
-          key: dependency-cache-{{ checksum "package-lock.json" }}  # Cache node_modules based on the package-lock.json checksum
+          key: dependency-cache-{{ checksum "package-lock.json" }}  # Cache node_modules
           paths:
-            - ./node_modules  # Path to cache
+            - ./node_modules
 
 workflows:
   version: 2
@@ -34,4 +36,4 @@ workflows:
           filters:
             branches:
               only:
-                - main  # Trigger the pipeline only for changes to the 'main' branch
+                - main  # Trigger pipeline only on 'main' branch
