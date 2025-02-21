@@ -20,7 +20,7 @@ jobs:
           command: npm install  # Installs dependencies
 
       - run:
-          name: Run tests
+          name: test-run
           command: npm run test  # Correct syntax for running tests
 
       - save_cache:
