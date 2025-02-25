@@ -1,33 +1,5 @@
 version: 2.1
 
-executors:
-  node-executor:
-    docker:
-      - image: cimg/node:10.16.3  # You can change this version if needed
-    working_directory: ~/ExampleApplication
-
-jobs:
-  build:
-    executor: node-executor
-    steps:
-      - checkout  # Checks out the code from the repository
-
-      - restore_cache:
-          key: dependency-cache-{{ checksum "package-lock.json" }}  # Restore cache
-
-      - run:
-          name: Install npm dependencies
-          command: npm install  # Installs dependencies
-
-      - run:
-          name: test-run
-          command: npm run test  # Correct syntax for running tests
-
-      - save_cache:
-          key: dependency-cache-{{ checksum "package-lock.json" }}  # Cache node_modules
-          paths:
-            - ./node_modules
-
 workflows:
   version: 2
   build:
@@ -36,4 +8,39 @@ workflows:
           filters:
             branches:
               only:
-                - main  # Trigger pipeline only on 'main' branch
+                - main
+      - deploy:
+          filters:
+            branches:
+              only:
+                - main
+          requires:
+            - build
+
+jobs:
+  build:
+    working_directory: ~/example_application
+    docker:
+      - image: circleci/node:10.16.3
+    steps:
+      - checkout
+      - run:
+          name: update-npm
+          command: sudo npm install -g npm@5
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package-lock.json" }}
+      - run:
+          name: install-npm-dependencies
+          command: npm install
+      - save_cache:
+          key: dependency-cache-{{ checksum "package-lock.json" }}
+          paths:
+            - ./node_modules
+
+  deploy:
+    docker:
+      - image: circleci/node:10.16.3
+    steps:
+      - run:
+          name: deploy-application
+          command: ssh -o StrictHostKeyChecking=no $EC2_USERNAME@$EC2_PUBLIC_DNS "rm -rf ExampleApplication/; git clone https://github.com/LDNP/ExampleApplication.git; source ExampleApplication/deploy.sh"
