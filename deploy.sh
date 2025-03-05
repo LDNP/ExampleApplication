@@ -13,8 +13,11 @@ cd ExampleApplication/
 
 # Install application dependencies
 npm install
-echo $PRIVATE_KEY . privatekey.pem
-echo $SERVER . server.crt
+echo "$PRIVATE_KEY" > privatekey.pem
+echo "$SERVER" > server.crt
+
+# Set the correct permissions for the private key (just to be safe)
+chmod 400 privatekey.pem
 
 # Start the application with the process name example_app using pm2
 pm2 start ./bin/www --name example_app
